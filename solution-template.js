@@ -55,9 +55,9 @@ function generateBoard(boardMetadata) {
     * "generate" an empty matrix
     *
      */
-    for (let i = 0; i < boardMetadata.rowCount; i++) {
-        board[i] = new Array(boardMetadata.colCount);
-        for (let j = 0; j < boardMetadata.colCount; j++) {
+    for (let i = 0; i < boardMetadata.colCount; i++) {
+        board[i] = new Array(boardMetadata.rowCount);
+        for (let j = 0; j < boardMetadata.rowCount; j++) {
             board[i][j] = new BoardSquare(false, 0);
         }
     }    
@@ -67,15 +67,8 @@ function generateBoard(boardMetadata) {
     * TODO fill the matrix with "BoardSquare" objects, that are in a pre-initialized state
     *
     */
-    for (let i = 0; i < boardMetadata.rowCount; i++) {
-            for (let j = 0; j < boardMetadata.colCount; j++) {
-                // TODO place the bomb, you can use the following formula: Math.random() * maxProbability < bombProbability
-                if (Math.random() * maxProbability < bombProbability) {
-                    board[i][j].hasBomb = true;
-                    bombCount++;
-                }
-            }
-        }
+
+    
     /*
     *
     * "place" bombs according to the probabilities declared at the top of the file
@@ -83,7 +76,15 @@ function generateBoard(boardMetadata) {
     * simplicity of the solution, I will not do that
     *
     */
-   
+    for (let i = 0; i < boardMetadata.colCount; i++) {
+        for (let j = 0; j < boardMetadata.rowCount; j++) {
+            // TODO place the bomb, you can use the following formula: Math.random() * maxProbability < bombProbability
+            if (Math.random() * maxProbability < bombProbability) {
+                board[i][j].hasBomb = true;
+                bombCount++;
+            }
+        }
+    }
 
     /*
     *
@@ -91,8 +92,6 @@ function generateBoard(boardMetadata) {
     * and no flagged squares
     *
      */
-
-
 
     for (let i = 0; i < boardMetadata.rowCount; i++) {
         for (let j = 0; j < boardMetadata.colCount; j++) {
@@ -168,7 +167,9 @@ function revealSquare(x, y) {
     } else {
         if (!openedSquares.some(sq => sq.x === x && sq.y === y)) {
             openedSquares.push(new Pair(x, y));
-            console.log(`square (${x}, ${y}) open`);
+            console.log(`square (${x},${y}) open`);
+
+            console.log(`no of bombs around square (${x},${y}): ${board[x][y].bombsAround}`);
 
             squaresLeft--;
             if (squaresLeft == bombCount) {
